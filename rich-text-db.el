@@ -65,6 +65,11 @@ SQL can be either the emacsql vector representation, or a string."
       (rich-text-db-crud `[:select ,fields :from ,table :where ,conds ])
     (rich-text-db-crud `[:select ,fields :from ,table])))
 
+(defun rich-text-db-query-count (table &optional conds)
+  (if conds
+      (caar (rich-text-db-crud `[:select (funcall count *) :from ,table :where ,conds]))
+    (caar (rich-text-db-crud `[:select (funcall count *) :from ,table]))))
+
 (defun rich-text-db-distinct-query (table fields &optional conds)
   (if conds
       (rich-text-db-crud `[:select :distinct ,fields :from ,table :where ,conds ])

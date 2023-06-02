@@ -4,18 +4,16 @@
 ;; chui93egchuiowecioweh
 ;; (rich-text-mode 1)
 ;; (setq rich-text-db-file "~/.config/emacs/rich-text")
-;; (rich-text-db-crud [:select * :from overlay])
 
 ;; (rich-text-db-crud [:select * :from ov])
 ;; (rich-text-db-crud [:select * :from ov
 ;;                       :where (= filename
 ;;                                 "c:/Users/26289/gknows/20230526193438.org")])
-;; ;; (rich-text-db-crud [:delete :from overlay])
+;; ;; (rich-text-db-crud [:delete :from ov])
 
 ;; (rich-text-db-crud
 ;;  `[:select [region face] :from ov
 ;;            :where (= filename ,(buffer-file-name))])
-
 
 ;; (cl-defstruct (rtm-face (:constructor rtm-face-create)
 ;;                         (:copier nil)

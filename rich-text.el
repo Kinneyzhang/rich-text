@@ -61,6 +61,8 @@ should be one of symbols line and wave")
           (setq ov (ov-set (ov-region) props)))
       (setq ov (ov-set (ov-line) props)))
     (setq ov (ov-set ov '(evaporate t)))
+    ;; indicate a overlay set by rich text.
+    (setq ov (ov-set ov '(rich-text t)))
     (rich-text-store-curr-ov (car (ov-spec ov)))))
 
 (defun rich-text-render-headline (arg)
@@ -158,7 +160,7 @@ Defaultly use `rich-text-default-italic-type'. If ARG is non-nil,
   (let ((id (rich-text-buffer-or-file-id (current-buffer))))
     (mapcar #'car (rich-text-db-distinct-query 'ov [id]))))
 
-(defun rich-text-id-stored-p (id)
+(defun rich-text-buffer-stored-p (id)
   (cl-member id (rich-text-all-id) :test 'string=))
 
 (defun rich-text-store-curr-ov (ov-spec)
@@ -168,16 +170,26 @@ Defaultly use `rich-text-default-italic-type'. If ARG is non-nil,
          (props (nth 3 ov-spec)))
     (rich-text-db-insert 'ov `([,id ,beg ,end ,props]))))
 
+(defun rich-text-buffer-ov-specs ()
+  "A list of overlay spec set by `rich-text-mode',
+ exclude other already exist overlays."
+  (seq-filter (lambda (spec)
+                (cl-member 'rich-text (nth 3 spec) :test 'eq))
+              (ov-spec (ov-in))))
+
 (defun rich-text-store-buffer-ov ()
-  (rich-text-db-delete 'ov `(= id ,(rich-text-buffer-or-file-id)))
-  (mapcar (lambda (spec)
-            (rich-text-store-curr-ov spec))
-          (ov-spec (ov-in))))
+  (let ((count (rich-text-db-query-count 'ov `(= id ,(rich-text-buffer-or-file-id)))))
+    (when (not (= count 0))
+      (rich-text-db-delete 'ov `(= id ,(rich-text-buffer-or-file-id))))
+    (when-let ((specs (rich-text-buffer-ov-specs)))
+      (mapcar (lambda (spec)
+                (rich-text-store-curr-ov spec))
+              specs))))
 
 (defun rich-text-restore-buffer-ov ()
   (interactive)
   (when-let* ((id (rich-text-buffer-or-file-id))
-              (_ (rich-text-id-stored-p id))
+              (_ (rich-text-buffer-stored-p id))
               (specs (rich-text-db-query 'ov [beg end props]
                                          `(= id ,id))))
     (mapcar (lambda (spec)
@@ -201,11 +213,13 @@ Defaultly use `rich-text-default-italic-type'. If ARG is non-nil,
         (add-hook 'post-command-hook 'rich-text-use-region-keyhint)
         (add-hook 'find-file-hook #'rich-text-restore-buffer-ov)
         (add-hook 'after-save-hook #'rich-text-store-buffer-ov)
-        (add-hook 'kill-buffer-hook #'rich-text-store-buffer-ov))
+        ;; (add-hook 'kill-buffer-hook #'rich-text-store-buffer-ov)
+        )
     (selected-global-mode -1)
     (remove-hook 'post-command-hook 'rich-text-use-region-keyhint)
     (remove-hook 'find-file-hook #'rich-text-restore-buffer-ov)
     (remove-hook 'after-save-hook #'rich-text-store-buffer-ov)
-    (remove-hook 'kill-buffer-hook #'rich-text-store-buffer-ov)))
+    ;; (remove-hook 'kill-buffer-hook #'rich-text-store-buffer-ov)
+    ))
 
 (provide 'rich-text)
