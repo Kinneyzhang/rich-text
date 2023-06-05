@@ -1,3 +1,11 @@
+(defun rich-text-color-test ()
+  (interactive)
+  (let ((color (completing-read "Input a color: " nil)))
+    (rich-text-ov-set-dwim `(face (:foreground ,color)))))
+
+;; #FF9800
+;; #00BCD4
+
 ;; find-file-hook
 ;; after-save-hook
 
@@ -6,9 +14,8 @@
 ;; (setq rich-text-db-file "~/.config/emacs/rich-text")
 
 ;; (rich-text-db-crud [:select * :from ov])
-;; (rich-text-db-crud [:select * :from ov
-;;                       :where (= filename
-;;                                 "c:/Users/26289/gknows/20230526193438.org")])
+(rich-text-db-crud
+ [:select * :from ov :where (= id "c:/Users/26289/gknows/20230526193438.org")])
 ;; ;; (rich-text-db-crud [:delete :from ov])
 
 ;; (rich-text-db-crud

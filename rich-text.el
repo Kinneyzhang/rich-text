@@ -18,10 +18,9 @@ should be one of symbols line and wave")
   '(ultra-bold extra-bold bold semi-bold normal semi-light light extra-light ultra-light))
 (defvar rich-text-italic-types
   '(italic oblique normal reverse-italic reverse-oblique))
-(defvar rich-text-underline-colors '("red" "blue" "grey"))
 (defvar rich-text-underline-styles '(line wave))
-(defvar rich-text-font-colors '("red" "blue" "grey"))
-(defvar rich-text-highlight-colors '("red" "blue" "grey"))
+(defvar rich-text-light-colors '("#F44336" "#009688" "#FF9800" "#00BCD4"))
+(defvar rich-text-dark-colors '("#F44336" "#009688" "#FF9800" "#00BCD4"))
 
 ;;; rich text properties
 
@@ -51,6 +50,32 @@ should be one of symbols line and wave")
 
 (defvar rich-text-mode-map (make-sparse-keymap))
 (defvar selected-emacs-lisp-mode-map (make-sparse-keymap))
+
+;;; utilities functions
+
+(defun rich-text-theme-dark-p ()
+  (eq (frame-parameter nil 'background-mode) 'dark))
+
+(defun rich-text-theme-light-p ()
+  (eq (frame-parameter nil 'background-mode) 'light))
+
+(defun rich-text-colors-by-theme ()
+  "Return a list of color according to the type of theme."
+  (when (rich-text-theme-light-p) rich-text-light-colors)
+  (when (rich-text-theme-dark-p) rich-text-dark-colors))
+
+(defun rich-text-propertized-colors-by-theme (face-type)
+  (pcase face-type
+    ('color (mapcar (lambda (color)
+                      (propertize color 'face `(:foreground ,color)))
+                    (rich-text-colors-by-theme)))
+    ('highlight (mapcar (lambda (color)
+                          (propertize color 'face `(:background ,color)))
+                        (rich-text-colors-by-theme)))
+    ('underline (mapcar (lambda (color)
+                          (propertize color 'face `(:underline (:color ,color))))
+                        (rich-text-colors-by-theme)))
+    (_ (rich-text-colors-by-theme))))
 
 ;;; render functions
 
@@ -108,33 +133,23 @@ Defaultly use `rich-text-default-italic-type'. If ARG is non-nil,
         (rich-text-ov-set-dwim `(face (:slant ,type))))
     (rich-text-ov-set-dwim rich-text-italic-props)))
 
-(defun rich-text-render-underline (arg)
-  (interactive "P")
-  (pcase arg
-    ;; line
-    (1 (let ((color (completing-read "Choose a line underline color"
-                                     rich-text-underline-colors)))
-         (rich-text-ov-set-dwim `(face (:underline (:color ,color :style line))))))
-    ;; wave
-    (2 (let ((color (completing-read "Choose a wave underline color"
-                                     rich-text-underline-colors)))
-         (rich-text-ov-set-dwim `(face (:underline (:color ,color :style wave))))))
-    (_ (rich-text-ov-set-dwim rich-text-underline-props))))
+(defun rich-text-render-underline ()
+  (interactive)
+  (let ((color (completing-read "Choose a line underline color"
+                                (rich-text-propertized-colors-by-theme 'underline))))
+    (rich-text-ov-set-dwim `(face (:underline (:color ,color :style line))))))
 
-(defun rich-text-render-color (arg)
-  (interactive "P")
-  (if arg
-      (let ((color (completing-read "Choose a font color" rich-text-font-colors)))
-        (rich-text-ov-set-dwim `(face (:foreground ,color))))
-    (rich-text-ov-set-dwim rich-text-color-props)))
+(defun rich-text-render-color ()
+  (interactive)
+  (let ((color (completing-read "Choose a font color"
+                                (rich-text-propertized-colors-by-theme 'color))))
+    (rich-text-ov-set-dwim `(face (:foreground ,color)))))
 
-(defun rich-text-render-highlight (arg)
-  (interactive "P")
-  (if arg
-      (let ((color (completing-read "Choose a highlight color"
-                                    rich-text-highlight-colors)))
-        (rich-text-ov-set-dwim `(face (:background ,color))))
-    (rich-text-ov-set-dwim rich-text-highlight-props)))
+(defun rich-text-render-highlight ()
+  (interactive)
+  (let ((color (completing-read "Choose a highlight color"
+                                (rich-text-propertized-colors-by-theme 'highlight))))
+    (rich-text-ov-set-dwim `(face (:background ,color)))))
 
 ;;; rich text mode
 
@@ -144,30 +159,27 @@ Defaultly use `rich-text-default-italic-type'. If ARG is non-nil,
   (define-key selected-keymap "h3" #'rich-text-render-headline-3)
   (define-key selected-keymap "b" #'rich-text-render-bold)
   (define-key selected-keymap "i" #'rich-text-render-italic)
-  (define-key selected-keymap "u" #'rich-text-render-underline)
-  (define-key selected-keymap "c" #'rich-text-render-color)
-  (define-key selected-keymap "v" #'rich-text-render-highlight))
+  (define-key selected-keymap "uu" #'rich-text-render-underline)
+  (define-key selected-keymap "cc" #'rich-text-render-color)
+  (define-key selected-keymap "hh" #'rich-text-render-highlight))
 
 (defun rich-text-buffer-or-file-id (&optional buffer-or-name)
   "FIXME: repalce with unique id of file or buffer in system."
-  (let* ((buffer-or-name (or buffer-or-name (current-buffer)))
-         (buffer (get-buffer buffer-or-name)))
-    (if-let ((file (buffer-file-name buffer)))
-        file
-      (buffer-name buffer))))
+  (let ((buffer-or-name (or buffer-or-name (current-buffer))))
+    (buffer-file-name (get-buffer buffer-or-name))))
 
 (defun rich-text-all-id ()
-  (let ((id (rich-text-buffer-or-file-id (current-buffer))))
+  (when-let ((id (rich-text-buffer-or-file-id (current-buffer))))
     (mapcar #'car (rich-text-db-distinct-query 'ov [id]))))
 
 (defun rich-text-buffer-stored-p (id)
   (cl-member id (rich-text-all-id) :test 'string=))
 
 (defun rich-text-store-curr-ov (ov-spec)
-  (let* ((beg (nth 0 ov-spec))
-         (end (nth 1 ov-spec))
-         (id (rich-text-buffer-or-file-id (nth 2 ov-spec)))
-         (props (nth 3 ov-spec)))
+  (when-let* ((beg (nth 0 ov-spec))
+              (end (nth 1 ov-spec))
+              (id (rich-text-buffer-or-file-id (nth 2 ov-spec)))
+              (props (nth 3 ov-spec)))
     (rich-text-db-insert 'ov `([,id ,beg ,end ,props]))))
 
 (defun rich-text-buffer-ov-specs ()
@@ -212,14 +224,10 @@ Defaultly use `rich-text-default-italic-type'. If ARG is non-nil,
         (rich-text-set-region-keymap)
         (add-hook 'post-command-hook 'rich-text-use-region-keyhint)
         (add-hook 'find-file-hook #'rich-text-restore-buffer-ov)
-        (add-hook 'after-save-hook #'rich-text-store-buffer-ov)
-        ;; (add-hook 'kill-buffer-hook #'rich-text-store-buffer-ov)
-        )
+        (add-hook 'after-save-hook #'rich-text-store-buffer-ov))
     (selected-global-mode -1)
     (remove-hook 'post-command-hook 'rich-text-use-region-keyhint)
     (remove-hook 'find-file-hook #'rich-text-restore-buffer-ov)
-    (remove-hook 'after-save-hook #'rich-text-store-buffer-ov)
-    ;; (remove-hook 'kill-buffer-hook #'rich-text-store-buffer-ov)
-    ))
+    (remove-hook 'after-save-hook #'rich-text-store-buffer-ov)))
 
 (provide 'rich-text)
