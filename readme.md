@@ -10,7 +10,10 @@
 ```
 
 # Commands
-| command functions               | default key |
+
+The following keys are used when a region is active and key bindings are invalided when the current major mode are derived from modes in `rich-text-selected-ignore-modes`.
+
+| command function                | default key |
 |---------------------------------|:-----------:|
 | rich-text-render-headline-1     | `h1`        |
 | rich-text-render-headline-2     | `h2`        |
