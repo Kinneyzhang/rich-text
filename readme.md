@@ -10,19 +10,19 @@
 ```
 
 # Commands
-| command functions                 | key  |   |
-|-----------------------------------|------|---|
-| `rich-text-render-headline-1`     | `h1` |   |
-| `rich-text-render-headline-2`     | `h2` |   |
-| `rich-text-render-headline-3`     | `h3` |   |
-| `rich-text-render-bold`           | `bb` |   |
-| `rich-text-render-italic`         | `ii` |   |
-| `rich-text-render-underline`      | `uu` |   |
-| `rich-text-render-fontcolor`      | `cc` |   |
-| `rich-text-render-highlight`      | `vv` |   |
-|                                   |      |   |
-| `rich-text-render-bold-dwim`      | `b1` |   |
-| `rich-text-render-italic-dwim`    | `i1` |   |
-| `rich-text-render-underline-dwim` | `u1` |   |
-| `rich-text-render-fontcolor-dwim` | `c1` |   |
-| `rich-text-render-highlight-dwim` | `v1` |   |
+| command functions               | default key |
+|---------------------------------|-------------|
+| rich-text-render-headline-1     | `h1`        |
+| rich-text-render-headline-2     | `h2`        |
+| rich-text-render-headline-3     | `h3`        |
+| rich-text-render-bold           | `bb`        |
+| rich-text-render-italic         | `ii`        |
+| rich-text-render-underline      | `uu`        |
+| rich-text-render-fontcolor      | `cc`        |
+| rich-text-render-highlight      | `vv`        |
+|                                 |             |
+| rich-text-render-bold-dwim      | `b1`        |
+| rich-text-render-italic-dwim    | `i1`        |
+| rich-text-render-underline-dwim | `u1`        |
+| rich-text-render-fontcolor-dwim | `c1`        |
+| rich-text-render-highlight-dwim | `v1`        |
