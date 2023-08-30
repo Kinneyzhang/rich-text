@@ -1,4 +1,4 @@
-# configuration
+# Configuration
 ```emacs-lisp
 (use-package rich-text
   :load-path "/path/to/rich-text"
@@ -9,18 +9,20 @@
   (rich-text-mode 1))
 ```
 
-# usage
-- `rich-text-render-headline-1`
-- `rich-text-render-headline-2`
-- `rich-text-render-headline-3`
-- `rich-text-render-bold`
-- `rich-text-render-italic`
-- `rich-text-render-underline`
-- `rich-text-render-fontcolor`
-- `rich-text-render-highlight`
-
-- `rich-text-render-bold-dwim`
-- `rich-text-render-italic-dwim`
-- `rich-text-render-underline-dwim`
-- `rich-text-render-fontcolor-dwim`
-- `rich-text-render-highlight-dwim`
+# Commands
+| command functions                 | key  |   |
+|-----------------------------------|------|---|
+| `rich-text-render-headline-1`     | `h1` |   |
+| `rich-text-render-headline-2`     | `h2` |   |
+| `rich-text-render-headline-3`     | `h3` |   |
+| `rich-text-render-bold`           | `bb` |   |
+| `rich-text-render-italic`         | `ii` |   |
+| `rich-text-render-underline`      | `uu` |   |
+| `rich-text-render-fontcolor`      | `cc` |   |
+| `rich-text-render-highlight`      | `vv` |   |
+|                                   |      |   |
+| `rich-text-render-bold-dwim`      | `b1` |   |
+| `rich-text-render-italic-dwim`    | `i1` |   |
+| `rich-text-render-underline-dwim` | `u1` |   |
+| `rich-text-render-fontcolor-dwim` | `c1` |   |
+| `rich-text-render-highlight-dwim` | `v1` |   |
