@@ -23,7 +23,6 @@ The following keys are used when a region is active and key bindings are invalid
 | rich-text-render-underline      | `uu`        | render underline with color `rich-text-underline-color` and style `rich-text-underline-style` |
 | rich-text-render-fontcolor      | `cc`        | render font color with `rich-text-font-color`                                                 |
 | rich-text-render-highlight      | `vv`        | render highlight color with `rich-text-highlight-color`                                       |
-|                                 |             |                                                                                               |
 | rich-text-render-bold-dwim      | `b1`        | choose a bold type from `rich-text-bold-types`                                                |
 | rich-text-render-italic-dwim    | `i1`        | choose a italic type from `rich-text-italic-types`                                            |
 | rich-text-render-underline-dwim | `u1`        | choose a underline color according to `rich-text-underline-colors-by-theme`                   |
