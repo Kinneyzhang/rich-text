@@ -11,7 +11,7 @@
 
 # Commands
 | command functions               | default key |
-|---------------------------------|-------------|
+|---------------------------------|:-----------:|
 | rich-text-render-headline-1     | `h1`        |
 | rich-text-render-headline-2     | `h2`        |
 | rich-text-render-headline-3     | `h3`        |
