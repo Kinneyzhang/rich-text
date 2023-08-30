@@ -20,7 +20,7 @@
 (defvar rich-text-headline-1-height 1.8
   "Default height of rich-text headline-1 face.")
 
-(defvar rich-text-headline-2-height 1.5
+(defvar rich-text-headline-2-height 1.4
   "Default height of rich-text headline-2 face.")
 
 (defvar rich-text-headline-3-height 1.2
