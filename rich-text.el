@@ -85,6 +85,11 @@
 (defvar rich-text-selected-ignore-modes nil
   "List of major modes for which selected will not be turned on.")
 
+(defvar rich-text-selected-key-alist
+  '(("bj" . rich-text-render-bold-dwim))
+  "Alist of key and the command which key binded to.
+The key bindings are used when a region is active.")
+
 ;;;; Rich-text face properties
 
 (defun rich-text-headline-1-props ()
@@ -310,22 +315,38 @@ Defaultly use `rich-text-italic-type'. If ARG is non-nil,
 
 ;;; when use region to render
 
+(defun keys-of-command (command keymap)
+  "Return all key bindins of COMMAND defined in KEYMAP."
+  (mapcar (lambda (vector-keys)
+            (kbd (key-description vector-keys)))
+          (where-is-internal command keymap)))
+
+(defun override-keys (alist keymap)
+  "Override keybindings in KEYMAP with cons-cell in ALIST.
+ALIST consists with key and command."
+  (mapcar (lambda (key-cmd)
+            (let ((keys (keys-of-command (cdr key-cmd) keymap)))
+              (mapcar (lambda (key) (define-key keymap key nil)) keys)
+              (define-key keymap (car key-cmd) (cdr key-cmd))))
+          alist))
+
 (defun rich-text-set-region-keymap ()
   (define-key selected-keymap "h1" #'rich-text-render-headline-1)
   (define-key selected-keymap "h2" #'rich-text-render-headline-2)
   (define-key selected-keymap "h3" #'rich-text-render-headline-3)
-  
   (define-key selected-keymap "bb" #'rich-text-render-bold)
   (define-key selected-keymap "ii" #'rich-text-render-italic)
   (define-key selected-keymap "uu" #'rich-text-render-underline)
   (define-key selected-keymap "cc" #'rich-text-render-fontcolor)
   (define-key selected-keymap "vv" #'rich-text-render-highlight)
-  
   (define-key selected-keymap "b1" #'rich-text-render-bold-dwim)
   (define-key selected-keymap "i1" #'rich-text-render-italic-dwim)
   (define-key selected-keymap "u1" #'rich-text-render-underline-dwim)
   (define-key selected-keymap "c1" #'rich-text-render-fontcolor-dwim)
-  (define-key selected-keymap "v1" #'rich-text-render-highlight-dwim))
+  (define-key selected-keymap "v1" #'rich-text-render-highlight-dwim)
+  ;; remove all key bindings to command defined in
+  ;; `rich-text-selected-key-alist' and bind to a new key.
+  (override-keys rich-text-selected-key-alist selected-keymap))
 
 (defun rich-text-use-region-keyhint ()
   "Rich text keybinding hint when a region active."

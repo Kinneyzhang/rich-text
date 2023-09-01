@@ -1,13 +1,23 @@
 # Configuration
 ```emacs-lisp
 (use-package rich-text
-  :load-path "/path/to/rich-text"
+  :load-path "~/PARA/RESOURCE/Emacs/pkgs/rich-text"
   :init
   (use-package selected :ensure t)
   (setq rich-text-selected-ignore-modes '(prog-mode))
+  (setq rich-text-selected-key-alist
+        '(("b." . rich-text-render-bold-dwim)
+          ("i." . rich-text-render-italic-dwim)
+          ("u." . rich-text-render-underline-dwim)
+          ("c." . rich-text-render-fontcolor-dwim)
+          ("v." . rich-text-render-highlight-dwim)))
   :config
   (rich-text-mode 1))
 ```
+
+- `rich-text-selected-ignore-modes` is a list of major modes in which you want to ignore rich-text local keybindings when a region is active.
+
+- `rich-text-selected-key-alist` is a alist consists of key and command to render rich text when region is active.
 
 # Commands
 
