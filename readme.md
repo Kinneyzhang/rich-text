@@ -1,7 +1,7 @@
 # Configuration
 ```emacs-lisp
 (use-package rich-text
-  :load-path "~/PARA/RESOURCE/Emacs/pkgs/rich-text"
+  :load-path "/path/to/rich-text"
   :init
   (use-package selected :ensure t)
   (setq rich-text-selected-ignore-modes '(prog-mode))
