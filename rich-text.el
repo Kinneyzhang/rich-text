@@ -1,3 +1,4 @@
+(require 'cl-macs)
 (require 'ov)
 (require 'selected)
 (require 'rich-text-db)
@@ -171,21 +172,25 @@ The key bindings are used when a region is active.")
     (setq ov (ov-set ov '(rich-text t)))
     (rich-text-store-curr-ov (car (ov-spec ov)))))
 
+;;;###autoload
 (defun rich-text-render-headline-1 ()
   "Render region or line with rich-text headline-1 face."
   (interactive)
   (rich-text-ov-set-dwim (rich-text-headline-1-props)))
 
+;;;###autoload
 (defun rich-text-render-headline-2 ()
   "Render region or line with rich-text headline-2 face."
   (interactive)
   (rich-text-ov-set-dwim (rich-text-headline-2-props)))
 
+;;;###autoload
 (defun rich-text-render-headline-3 ()
   "Render region or line with rich-text headline-3 face."
   (interactive)
   (rich-text-ov-set-dwim (rich-text-headline-3-props)))
 
+;;;###autoload
 (defun rich-text-render-bold (arg)
   "Render region or line with face attribute :weight.
 Defaultly use `rich-text-bold-type'. If ARG is non-nil,
@@ -196,10 +201,12 @@ Defaultly use `rich-text-bold-type'. If ARG is non-nil,
         (rich-text-ov-set-dwim `(face (:weight ,(intern type)))))
     (rich-text-ov-set-dwim (rich-text-bold-props))))
 
+;;;###autoload
 (defun rich-text-render-bold-dwim ()
   (interactive)
   (rich-text-render-bold 1))
 
+;;;###autoload
 (defun rich-text-render-italic (arg)
   "Render region or line with face attribute :slant.
 Defaultly use `rich-text-italic-type'. If ARG is non-nil,
@@ -210,10 +217,12 @@ Defaultly use `rich-text-italic-type'. If ARG is non-nil,
         (rich-text-ov-set-dwim `(face (:slant ,(intern type)))))
     (rich-text-ov-set-dwim (rich-text-italic-props))))
 
+;;;###autoload
 (defun rich-text-render-italic-dwim ()
   (interactive)
   (rich-text-render-italic 1))
 
+;;;###autoload
 (defun rich-text-render-underline (arg)
   "Render region or line with face attribute :slant.
  Defaultly use `rich-text-underline-color' and `rich-text-underline-style'.
@@ -229,10 +238,12 @@ Defaultly use `rich-text-italic-type'. If ARG is non-nil,
         (rich-text-ov-set-dwim `(face (:underline (:color ,color :style ,(intern style))))))
     (rich-text-ov-set-dwim (rich-text-underline-props))))
 
+;;;###autoload
 (defun rich-text-render-underline-dwim ()
   (interactive)
   (rich-text-render-underline 1))
 
+;;;###autoload
 (defun rich-text-render-fontcolor (arg)
   "Render region or line font with color.
  Defaultly use `rich-text-font-color'. If ARG is non-nil,
@@ -244,10 +255,12 @@ Defaultly use `rich-text-italic-type'. If ARG is non-nil,
         (rich-text-ov-set-dwim `(face (:foreground ,color))))
     (rich-text-ov-set-dwim (rich-text-fontcolor-props))))
 
+;;;###autoload
 (defun rich-text-render-fontcolor-dwim ()
   (interactive)
   (rich-text-render-fontcolor 1))
 
+;;;###autoload
 (defun rich-text-render-highlight (arg)
   "Render region or line with highlight color.
  Defaultly use `rich-text-highlight-color'. If ARG is non-nil,
@@ -259,6 +272,7 @@ Defaultly use `rich-text-italic-type'. If ARG is non-nil,
         (rich-text-ov-set-dwim `(face (:background ,color))))
     (rich-text-ov-set-dwim (rich-text-highlight-props))))
 
+;;;###autoload
 (defun rich-text-render-highlight-dwim ()
   (interactive)
   (rich-text-render-highlight 1))
@@ -300,6 +314,7 @@ Defaultly use `rich-text-italic-type'. If ARG is non-nil,
                 (rich-text-store-curr-ov spec))
               specs))))
 
+;;;###autoload
 (defun rich-text-restore-buffer-ov ()
   (interactive)
   (when-let* ((id (rich-text-buffer-or-file-id))
@@ -321,13 +336,19 @@ Defaultly use `rich-text-italic-type'. If ARG is non-nil,
             (kbd (key-description vector-keys)))
           (where-is-internal command keymap)))
 
+(defun unset-command-keys (keymap command)
+  (mapcar (lambda (key)
+            (define-key keymap key nil))
+          (keys-of-command command keymap)))
+
 (defun override-keys (alist keymap)
   "Override keybindings in KEYMAP with cons-cell in ALIST.
 ALIST consists with key and command."
   (mapcar (lambda (key-cmd)
-            (let ((keys (keys-of-command (cdr key-cmd) keymap)))
-              (mapcar (lambda (key) (define-key keymap key nil)) keys)
-              (define-key keymap (car key-cmd) (cdr key-cmd))))
+            (let ((key (car key-cmd))
+                  (cmd (cdr key-cmd)))
+              (unset-command-keys keymap cmd)
+              (define-key keymap key cmd)))
           alist))
 
 (defun rich-text-set-region-keymap ()
@@ -356,6 +377,7 @@ ALIST consists with key and command."
     (when (use-region-p)
       (message "[h]headline [b]bold [i]italic [u]underline [c]color [v]highlight"))))
 
+;;;###autoload
 (define-minor-mode rich-text-mode
   "Minor mode for showing rich text in buffer."
   :lighter "RT"
@@ -373,5 +395,16 @@ ALIST consists with key and command."
     (remove-hook 'post-command-hook 'rich-text-use-region-keyhint)
     (remove-hook 'find-file-hook #'rich-text-restore-buffer-ov)
     (remove-hook 'after-save-hook #'rich-text-store-buffer-ov)))
+
+(cl-defmacro define-rich-text-face (name &key key props)
+  (let* ((func-prefix "rich-text-render-")
+         (render-func (intern (concat "rich-text-render-"
+                                      (symbol-name name)))))
+    `(progn
+       (defun ,render-func ()
+         (interactive)
+         (rich-text-ov-set-dwim ',props))
+       (unset-command-keys selected-keymap ',render-func)
+       (define-key selected-keymap ,key #',render-func))))
 
 (provide 'rich-text)

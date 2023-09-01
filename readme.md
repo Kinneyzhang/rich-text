@@ -3,7 +3,6 @@ Rich-text is an emacs package to render rich text in various types of files.
 # Demo
 
 
-
 # Configuration
 ```emacs-lisp
 (use-package rich-text
