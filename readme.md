@@ -25,24 +25,29 @@ Rich-text is an emacs package to render rich text in various types of files.
 
 - `rich-text-selected-key-alist` is a alist consists of key and command to render rich text when region is active.
 
-**use `define-rich-text-face` macro to define your own rich text face.**
+use `define-rich-text-face` macro to customize your own rich text face.
 
 ```emacs-lisp
 (define-rich-text-face pretty-green-light-1
   :key "gl1"
-  :props (face (:background "#5B9A8B" :foreground "white")))
+  :props
+  (face (:background "#5B9A8B" :foreground "white"
+                     :box (:line-width (3 . 1) :color "#5B9A8B"))))
 
 (define-rich-text-face pretty-green-dark-1
   :key "gd1"
-  :props (face (:background "#016A70" :foreground "white")))
+  :props (face (:background "#016A70" :foreground "white"
+                            :box (:line-width (3 . 1) :color "#016A70"))))
 
 (define-rich-text-face pretty-purple-light-1
   :key "pl1"
-  :props (face (:background "#8062D6" :foreground "white")))
+  :props (face (:background "#8062D6" :foreground "white"
+                            :box (:line-width (3 . 1) :color "#8062D6"))))
 
 (define-rich-text-face pretty-orange-light-1
   :key "ol1"
-  :props (face (:background "#FF8551" :foreground "white")))
+  :props (face (:background "#FF8551" :foreground "white"
+                            :box (:line-width (3 . 1) :color "#FF8551"))))
 ```
 
 # Commands

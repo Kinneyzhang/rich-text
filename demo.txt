@@ -1,12 +1,29 @@
-this is dark green....
+Rich Text
 
-this is dark green....
+Introduction
 
+Rich-text is an emacs package to render rich text in various types of files.
 
-this is dark green....
+Configuration
 
-this is dark green....
+rich-text-selected-ignore-modes is a list of major modes in which you want to ignore rich-text local keybindings when a region is active.
 
-this is dark green....
+rich-text-selected-key-alist is a alist consists of key and command to render rich text when region is active.
 
-this is dark green....
+rich-text-selected-key-alist is a alist consists of key and command to render rich text when region is active.
+
+(define-rich-text-face pretty-green-light-1
+  :key "gl1"
+  :props (face (:background "#5B9A8B" :foreground "white")))
+
+(define-rich-text-face pretty-green-dark-1
+  :key "gd1"
+  :props (face (:background "#016A70" :foreground "white")))
+
+(define-rich-text-face pretty-purple-light-1
+  :key "pl1"
+  :props (face (:background "#8062D6" :foreground "white")))
+
+(define-rich-text-face pretty-orange-light-1
+  :key "ol1"
+  :props (face (:background "#FF8551" :foreground "white")))
