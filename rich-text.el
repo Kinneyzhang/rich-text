@@ -142,9 +142,9 @@ ALIST consists with key and command."
          (interactive)
          (let (theme-props)
            (when (and ',light (rich-text-theme-light-p))
-             (setq theme-props ',light))
+             (setq theme-props (or ',light ',props)))
            (when (and ',dark (rich-text-theme-dark-p))
-             (setq theme-props ',dark))
+             (setq theme-props (or ',dark ',props)))
            (if theme-props
                (progn
                  ;; at least one of light and dark props
@@ -251,12 +251,19 @@ ALIST consists with key and command."
      ((rich-text-theme-dark-p) (or (plist-get plist :dark)
                                    (plist-get plist :props))))))
 
-(defun rich-text-ov-reverse ()
+(defun rich-text-reverse ()
   (let ((ovs (ov-in 'reverse-p t)))
     (mapcar (lambda (ov)
               (let ((name (ov-val ov 'rich-text)))
                 (ov-set ov (rich-text-get-props name))))
             ovs)))
+
+(defun rich-text-reverse-all ()
+  (save-window-excursion
+    (mapcar (lambda (win)
+              (select-window win)
+              (rich-text-reverse))
+            (window-list))))
 
 (define-rich-text headline-1 "h1"
   (rich-text-headline-1-props))
@@ -296,7 +303,7 @@ ALIST consists with key and command."
 
 (define-rich-text-dwim underline-line "uu"
   :props (face (:underline (:style wave)))
-  :dark (face (:underline (:style line))))
+  :light (face (:underline (:style line))))
 
 (define-rich-text-dwim highlight-test-1 "v1"
   :light (face (:background "#F7E987" :foreground "black"))
@@ -396,7 +403,7 @@ ALIST consists with key and command."
         ;; when change the background of emacs theme.
         ;; reverse the ov
         (add-hook 'rich-text-theme-background-change-hook
-                  #'rich-text-ov-reverse)
+                  #'rich-text-reverse-all)
         (add-hook 'find-file-hook #'rich-text-restore-buffer-ov)
         (add-hook 'after-save-hook #'rich-text-store-buffer-ov))
     (selected-global-mode -1)
@@ -404,7 +411,7 @@ ALIST consists with key and command."
     (advice-remove #'counsel-load-theme #'rich-text-change-theme-background)
     (advice-remove #'load-theme #'rich-text-change-theme-background)
     (remove-hook 'rich-text-theme-background-change-hook
-              #'rich-text-ov-reverse)
+                 #'rich-text-reverse-all)
     (remove-hook 'find-file-hook #'rich-text-restore-buffer-ov)
     (remove-hook 'after-save-hook #'rich-text-store-buffer-ov)))
 
