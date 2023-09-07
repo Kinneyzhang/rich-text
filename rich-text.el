@@ -1,7 +1,4 @@
 (require 'cl-macs)
-(require 'dash)
-(require 'ov)
-(require 'selected)
 (require 'rich-text-db)
 
 ;;;; Variables
@@ -13,9 +10,6 @@
 (defconst rich-text-italic-types
   '(italic oblique normal reverse-italic reverse-oblique)
   "A list of rich-text italic face types.")
-
-;; (defconst rich-text-underline-styles '(line wave)
-;;   "A list of rich-text underline face styles.")
 
 ;;; headline
 
@@ -80,12 +74,13 @@
     map)
   "Keymap for rich-text-mode.")
 
+(defvar selected-keymap
+  (let ((map (make-sparse-keymap)))
+    map)
+  "Keymap for selected-mode.")
+
 (defvar rich-text-selected-ignore-modes nil
   "List of major modes for which selected will not be turned on.")
-
-(defvar rich-text-selected-key-alist nil
-  "Alist of key and the command which key binded to.
-The key bindings are used when a region is active.")
 
 ;;; theme background change hook
 
@@ -251,63 +246,25 @@ ALIST consists with key and command."
      ((rich-text-theme-dark-p) (or (plist-get plist :dark)
                                    (plist-get plist :props))))))
 
+(defun rich-text-buffer-reverse-p (buffer)
+  (with-current-buffer buffer
+    (ov-in 'reverse-p t)))
+
 (defun rich-text-reverse ()
-  (let ((ovs (ov-in 'reverse-p t)))
+  (when-let ((ovs (ov-in 'reverse-p t)))
     (mapcar (lambda (ov)
               (let ((name (ov-val ov 'rich-text)))
                 (ov-set ov (rich-text-get-props name))))
             ovs)))
 
-(defun rich-text-reverse-all ()
+(defun rich-text-reverse-all (&rest _)
   (save-window-excursion
     (mapcar (lambda (win)
-              (select-window win)
-              (rich-text-reverse))
+              (let ((buffer (window-buffer win)))
+                (when (rich-text-buffer-reverse-p buffer)
+                  (with-current-buffer buffer
+                    (rich-text-reverse)))))
             (window-list))))
-
-(define-rich-text headline-1 "h1"
-  (rich-text-headline-1-props))
-
-(define-rich-text headline-2 "h2"
-  (rich-text-headline-2-props))
-
-(define-rich-text headline-3 "h3"
-  (rich-text-headline-3-props))
-
-(define-rich-text bold "bb"
-  (rich-text-bold-props))
-
-(define-rich-text italic "ii"
-  (rich-text-italic-props))
-
-(define-rich-text underline-line "ul"
-  (rich-text-underline-line-props))
-
-(define-rich-text underline-wave "uw"
-  (rich-text-underline-wave-props))
-
-(define-rich-text fontcolor "cc"
-  (rich-text-fontcolor-props))
-
-(define-rich-text highlight "vv"
-  (rich-text-highlight-props))
-
-(define-rich-text bold-italic "bi"
-  '(face (:weight bold :slant italic)))
-
-(define-rich-text bold-italic "bi"
-  '(face (:weight bold :slant italic)))
-
-(define-rich-text bold-underline "bu"
-  '(face (:weight bold :underline t)))
-
-(define-rich-text-dwim underline-line "uu"
-  :props (face (:underline (:style wave)))
-  :light (face (:underline (:style line))))
-
-(define-rich-text-dwim highlight-test-1 "v1"
-  :light (face (:background "#F7E987" :foreground "black"))
-  :dark (face (:background "#C58940" :foreground "white")))
 
 (defun rich-text-change-theme-background (orig-fun &rest args)
   "Advice functon when load a theme."
@@ -365,16 +322,10 @@ ALIST consists with key and command."
     (mapcar (lambda (spec)
               (ov (nth 0 spec) (nth 1 spec) (nth 2 spec)))
             specs)
-    (message "%s rich-text overlays restored!" (length specs))))
+    (message "%s rich-text overlays restored!" (length specs))
+    (rich-text-reverse-all)))
 
 ;;;; Rich text mode
-
-;;; when use region to render
-
-(defun rich-text-set-region-keymap ()
-  ;; remove all key bindings to command defined in
-  ;; `rich-text-selected-key-alist' and bind to a new key.
-  (override-keys rich-text-selected-key-alist selected-keymap))
 
 (defun rich-text-use-region-keyhint (&rest _)
   "Rich text keybinding hint when a region active."
@@ -386,6 +337,19 @@ ALIST consists with key and command."
 [c]color [v]highlight"))))
 
 ;;;###autoload
+(defun rich-text-install-dependencies ()
+  (interactive)
+  (unless (package-installed-p 'selected)
+    (package-install 'selected))
+  (unless (package-installed-p 'ov)
+    (package-install 'ov))
+  (unless (package-installed-p 'dash)
+    (package-install 'dash))
+  (require 'selected)
+  (require 'ov)
+  (require 'dash))
+
+;;;###autoload
 (define-minor-mode rich-text-mode
   "Minor mode for showing rich text in buffer."
   :lighter "RT"
@@ -393,26 +357,72 @@ ALIST consists with key and command."
   :keymap rich-text-mode-map
   (if rich-text-mode
       (progn
+        (rich-text-install-dependencies)
         (selected-global-mode 1)
         (setq selected-ignore-modes rich-text-selected-ignore-modes)
         (advice-add #'handle-shift-selection :after #'rich-text-use-region-keyhint)
         (when (package-installed-p 'counsel)
           (advice-add #'counsel-load-theme :around #'rich-text-change-theme-background))
         (advice-add #'load-theme :around #'rich-text-change-theme-background)
-        (rich-text-set-region-keymap)
-        ;; when change the background of emacs theme.
-        ;; reverse the ov
-        (add-hook 'rich-text-theme-background-change-hook
-                  #'rich-text-reverse-all)
+        (advice-add #'switch-to-buffer :after #'rich-text-reverse-all)
+        ;; when change the background of emacs theme, reverse the ov
+        (add-hook 'rich-text-theme-background-change-hook #'rich-text-reverse-all)
         (add-hook 'find-file-hook #'rich-text-restore-buffer-ov)
         (add-hook 'after-save-hook #'rich-text-store-buffer-ov))
     (selected-global-mode -1)
     (advice-remove #'handle-shift-selection #'rich-text-use-region-keyhint)
     (advice-remove #'counsel-load-theme #'rich-text-change-theme-background)
     (advice-remove #'load-theme #'rich-text-change-theme-background)
+    (advice-remove #'switch-to-buffer #'rich-text-reverse-all)
     (remove-hook 'rich-text-theme-background-change-hook
                  #'rich-text-reverse-all)
     (remove-hook 'find-file-hook #'rich-text-restore-buffer-ov)
     (remove-hook 'after-save-hook #'rich-text-store-buffer-ov)))
+
+;;;; some build-in rich-text formats.
+
+(define-rich-text headline-1 "h1"
+  (rich-text-headline-1-props))
+
+(define-rich-text headline-2 "h2"
+  (rich-text-headline-2-props))
+
+(define-rich-text headline-3 "h3"
+  (rich-text-headline-3-props))
+
+(define-rich-text bold "bb"
+  (rich-text-bold-props))
+
+(define-rich-text italic "ii"
+  (rich-text-italic-props))
+
+(define-rich-text underline-line "ul"
+  (rich-text-underline-line-props))
+
+(define-rich-text underline-wave "uw"
+  (rich-text-underline-wave-props))
+
+(define-rich-text fontcolor "cc"
+  (rich-text-fontcolor-props))
+
+(define-rich-text highlight "vv"
+  (rich-text-highlight-props))
+
+(define-rich-text bold-italic "bi"
+  '(face (:weight bold :slant italic)))
+
+(define-rich-text bold-italic "bi"
+  '(face (:weight bold :slant italic)))
+
+(define-rich-text bold-underline "bu"
+  '(face (:weight bold :underline t)))
+
+(define-rich-text-dwim underline-line "uu"
+  :props (face (:underline (:style wave)))
+  :light (face (:underline (:style line))))
+
+(define-rich-text-dwim highlight-test-1 "v1"
+  :light (face (:background "#F7E987" :foreground "black"))
+  :dark (face (:background "#C58940" :foreground "white")))
 
 (provide 'rich-text)
