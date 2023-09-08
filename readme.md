@@ -21,18 +21,17 @@ use `define-rich-text` and `define-rich-text-dwim` macros to customize your own 
 ## some built-in ones
 There are some built-in rich-text formats:
 
-| rich-text      | key  |                                                                       |
-|----------------|------|-----------------------------------------------------------------------|
-| headline-1     | `h1` | set `rich-text-headline-1-height` to customize the default height     |
-| headline-2     | `h2` | set `rich-text-headline-2-height` to customize the default height     |
-| headline-3     | `h3` | set `rich-text-headline-3-height` to customize the default height     |
-| bold           | `bb` | set `rich-text-bold-type` to customize the default type of 'bold'     |
-| italic         | `ii` | set `rich-text-italic-type` to customize the default type of 'italic' |
-| underline-line | `ul` | straight underline                                                    |
-| underline-wave | `uw` | wave underline                                                        |
-| fontcolor      | `cc` | set `rich-text-font-color` to customize the default color             |
-| highlight      | `vv` | set `rich-text-highlight-color` to customize the default color        |
-|                |      |                                                                       |
+| rich-text      | key  |                                                                        |
+|----------------|------|------------------------------------------------------------------------|
+| headline-1     | `h1` | set `rich-text-headline-1-height` to customize the default height.     |
+| headline-2     | `h2` | set `rich-text-headline-2-height` to customize the default height.     |
+| headline-3     | `h3` | set `rich-text-headline-3-height` to customize the default height.     |
+| underline-line | `ul` | straight underline                                                     |
+| underline-wave | `uw` | wave underline                                                         |
+| bold           | `bb` | set `rich-text-bold-type` to customize the default type of `bold`.     |
+| italic         | `ii` | set `rich-text-italic-type` to customize the default type of `italic`. |
+| fontcolor      | `cc` | set `rich-text-font-color` to customize the default color.             |
+| highlight      | `vv` | set `rich-text-highlight-color` to customize the default color.        |
 
 - the type of `bold` should be one of the symbols `ultra-bold extra-bold bold semi-bold normal semi-light light extra-light ultra-light`.
 - the type of `italic` should be one of the symbols `italic oblique normal reverse-italic reverse-oblique`.
