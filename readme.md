@@ -21,7 +21,7 @@ use `define-rich-text` and `define-rich-text-dwim` macros to customize your own 
 ## some built-in ones
 There are some built-in rich-text formats:
 
-- **headline-1** (default key `h1`):
+- headline-1 (**h1**):\
   set `rich-text-headline-1-height` to customize the default height of 'headline-1'.
 - headline-2: set `rich-text-headline-2-height` to customize the default height of 'headline-2'.
 - headline-3: set `rich-text-headline-3-height` to customize the default height of 'headline-3'.
