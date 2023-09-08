@@ -36,36 +36,36 @@
 
 ;;; underline
 
-(defvar rich-text-underline-color "black"
-  "Default color of rich-text underline face.")
+;; (defvar rich-text-underline-color "black"
+;;   "Default color of rich-text underline face.")
 
-(defvar rich-text-underline-light-colors '("#F44336" "#009688" "#FF9800" "#00BCD4")
-  "Preset a list of rich-text underline colors in light themes.")
+;; (defvar rich-text-underline-light-colors '("#F44336" "#009688" "#FF9800" "#00BCD4")
+;;   "Preset a list of rich-text underline colors in light themes.")
 
-(defvar rich-text-underline-dark-colors '("#F44336" "#009688" "#FF9800" "#00BCD4")
-  "Preset a list of rich-text underline colors in dark themes.")
+;; (defvar rich-text-underline-dark-colors '("#F44336" "#009688" "#FF9800" "#00BCD4")
+;;   "Preset a list of rich-text underline colors in dark themes.")
 
 ;;; font color
 
 (defvar rich-text-font-color "blue"
   "Default color of rich-text font color face.")
 
-(defvar rich-text-font-light-colors '("#F44336" "#009688" "#FF9800" "#00BCD4")
-  "Preset a list of rich-text font colors in light themes.")
+;; (defvar rich-text-font-light-colors '("#F44336" "#009688" "#FF9800" "#00BCD4")
+;;   "Preset a list of rich-text font colors in light themes.")
 
-(defvar rich-text-font-dark-colors '("#F44336" "#009688" "#FF9800" "#00BCD4")
-  "Preset a list of rich-text font colors in dark themes.")
+;; (defvar rich-text-font-dark-colors '("#F44336" "#009688" "#FF9800" "#00BCD4")
+;;   "Preset a list of rich-text font colors in dark themes.")
 
 ;;; highlight
 
 (defvar rich-text-highlight-color "yellow"
   "Default color of rich-text font highlight face.")
 
-(defvar rich-text-highlight-light-colors '("#F44336" "#009688" "#FF9800" "#00BCD4")
-  "Preset a list of rich-text highlight colors in light themes.")
+;; (defvar rich-text-highlight-light-colors '("#F44336" "#009688" "#FF9800" "#00BCD4")
+;;   "Preset a list of rich-text highlight colors in light themes.")
 
-(defvar rich-text-highlight-dark-colors '("#F44336" "#009688" "#FF9800" "#00BCD4")
-  "Preset a list of rich-text highlight colors in dark themes.")
+;; (defvar rich-text-highlight-dark-colors '("#F44336" "#009688" "#FF9800" "#00BCD4")
+;;   "Preset a list of rich-text highlight colors in dark themes.")
 
 ;;; mode map
 
@@ -189,39 +189,39 @@ ALIST consists with key and command."
 (defun rich-text-theme-light-p ()
   (eq (frame-parameter nil 'background-mode) 'light))
 
-(defun rich-text-underline-colors-by-theme ()
-  "Return a list of underline colors according to the type of theme."
-  (cond
-   ((rich-text-theme-light-p) rich-text-underline-light-colors)
-   ((rich-text-theme-dark-p) rich-text-underline-dark-colors)))
+;; (defun rich-text-underline-colors-by-theme ()
+;;   "Return a list of underline colors according to the type of theme."
+;;   (cond
+;;    ((rich-text-theme-light-p) rich-text-underline-light-colors)
+;;    ((rich-text-theme-dark-p) rich-text-underline-dark-colors)))
 
-(defun rich-text-font-colors-by-theme ()
-  "Return a list of font colors according to the type of theme."
-  (cond
-   ((rich-text-theme-light-p) rich-text-font-light-colors)
-   ((rich-text-theme-dark-p) rich-text-font-dark-colors)))
+;; (defun rich-text-font-colors-by-theme ()
+;;   "Return a list of font colors according to the type of theme."
+;;   (cond
+;;    ((rich-text-theme-light-p) rich-text-font-light-colors)
+;;    ((rich-text-theme-dark-p) rich-text-font-dark-colors)))
 
-(defun rich-text-highlight-colors-by-theme ()
-  "Return a list of highlight colors according to the type of theme."
-  (cond
-   ((rich-text-theme-light-p) rich-text-highlight-light-colors)
-   ((rich-text-theme-dark-p) rich-text-highlight-dark-colors)))
+;; (defun rich-text-highlight-colors-by-theme ()
+;;   "Return a list of highlight colors according to the type of theme."
+;;   (cond
+;;    ((rich-text-theme-light-p) rich-text-highlight-light-colors)
+;;    ((rich-text-theme-dark-p) rich-text-highlight-dark-colors)))
 
-(defun rich-text-propertize-colors-by-theme (face-type)
-  (pcase face-type
-    ('underline
-     (mapcar (lambda (color)
-               (propertize color 'face `(:underline (:color ,color))))
-             (rich-text-underline-colors-by-theme)))
-    ('fontcolor
-     (mapcar (lambda (color)
-               (propertize color 'face `(:foreground ,color)))
-             (rich-text-font-colors-by-theme)))
-    ('highlight
-     (mapcar (lambda (color)
-               (propertize color 'face `(:background ,color)))
-             (rich-text-highlight-colors-by-theme)))
-    (_ (rich-text-font-colors-by-theme))))
+;; (defun rich-text-propertize-colors-by-theme (face-type)
+;;   (pcase face-type
+;;     ('underline
+;;      (mapcar (lambda (color)
+;;                (propertize color 'face `(:underline (:color ,color))))
+;;              (rich-text-underline-colors-by-theme)))
+;;     ('fontcolor
+;;      (mapcar (lambda (color)
+;;                (propertize color 'face `(:foreground ,color)))
+;;              (rich-text-font-colors-by-theme)))
+;;     ('highlight
+;;      (mapcar (lambda (color)
+;;                (propertize color 'face `(:background ,color)))
+;;              (rich-text-highlight-colors-by-theme)))
+;;     (_ (rich-text-font-colors-by-theme))))
 
 ;;;; Rich-text render functions
 
@@ -408,21 +408,11 @@ ALIST consists with key and command."
 (define-rich-text highlight "vv"
   (rich-text-highlight-props))
 
-(define-rich-text bold-italic "bi"
-  '(face (:weight bold :slant italic)))
+;; (define-rich-text bold-italic "bi"
+;;   '(face (:weight bold :slant italic)))
 
-(define-rich-text bold-italic "bi"
-  '(face (:weight bold :slant italic)))
-
-(define-rich-text bold-underline "bu"
-  '(face (:weight bold :underline t)))
-
-(define-rich-text-dwim underline-line "uu"
-  :props (face (:underline (:style wave)))
-  :light (face (:underline (:style line))))
-
-(define-rich-text-dwim highlight-test-1 "v1"
-  :light (face (:background "#F7E987" :foreground "black"))
-  :dark (face (:background "#C58940" :foreground "white")))
+;; (define-rich-text-dwim underline-line "uu"
+;;   :props (face (:underline (:style wave)))
+;;   :light (face (:underline (:style line))))
 
 (provide 'rich-text)
