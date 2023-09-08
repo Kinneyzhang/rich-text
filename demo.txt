@@ -2,13 +2,12 @@ Rich Text
 
 Introduction
 
-Rich-text is an emacs package to render rich text in various types of files.
+Rich-text is an emacs package to render
+Rich-text is an emacs package to render
 
 Configuration
 
 rich-text-selected-ignore-modes is a list of major modes in which you want to ignore rich-text local keybindings when a region is active.
-
-rich-text-selected-key-alist is a alist consists of key and command to render rich text when region is active.
 
 rich-text-selected-key-alist is a alist consists of key and command to render rich text when region is active.
 

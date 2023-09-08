@@ -47,8 +47,11 @@
 
 ;;; font color
 
-(defvar rich-text-font-color "blue"
-  "Default color of rich-text font color face.")
+(defvar rich-text-fontcolor-light-color "#BA36A5"
+  "Default color of rich-text font color in light theme.")
+
+(defvar rich-text-fontcolor-dark-color "#FFCB6B"
+  "Default color of rich-text font color in dark theme.")
 
 ;; (defvar rich-text-font-light-colors '("#F44336" "#009688" "#FF9800" "#00BCD4")
 ;;   "Preset a list of rich-text font colors in light themes.")
@@ -58,8 +61,11 @@
 
 ;;; highlight
 
-(defvar rich-text-highlight-color "yellow"
-  "Default color of rich-text font highlight face.")
+(defvar rich-text-highlight-light-color "#F7E987"
+  "Default color of rich-text highlight color in light theme.")
+
+(defvar rich-text-highlight-dark-color "#C58940"
+  "Default color of rich-text highlight color in dark theme.")
 
 ;; (defvar rich-text-highlight-light-colors '("#F44336" "#009688" "#FF9800" "#00BCD4")
 ;;   "Preset a list of rich-text highlight colors in light themes.")
@@ -127,26 +133,26 @@ ALIST consists with key and command."
   (let* ((name-str (symbol-name name))
          (func-prefix "rich-text-render-")
          (render-func (intern (concat func-prefix name-str "-dwim"))))
+    (when-let ((lst (assoc name rich-text-alist)))
+      (setq rich-text-alist (remove lst rich-text-alist)))
+    (add-to-list 'rich-text-alist
+                 (list name :key key :props (eval props)
+                       :light (eval light) :dark (eval dark)))
     `(progn
-       (when-let ((lst (assoc ',name rich-text-alist)))
-         (setq rich-text-alist (remove lst rich-text-alist)))
-       (add-to-list 'rich-text-alist
-                    '(,name :key ,key :props ,props
-                            :light ,light :dark ,dark))
        (defun ,render-func ()
          (interactive)
          (let (theme-props)
-           (when (and ',light (rich-text-theme-light-p))
-             (setq theme-props (or ',light ',props)))
-           (when (and ',dark (rich-text-theme-dark-p))
-             (setq theme-props (or ',dark ',props)))
+           (when (rich-text-theme-light-p)
+             (setq theme-props (or ,light ,props)))
+           (when (rich-text-theme-dark-p)
+             (setq theme-props (or ,dark ,props)))
            (if theme-props
                (progn
                  ;; at least one of light and dark props
                  (rich-text-ov-set-dwim ',name theme-props t))
              ;; no light or dark props
-             (if ',props
-                 (rich-text-ov-set-dwim ',name ',props)
+             (if ,props
+                 (rich-text-ov-set-dwim ',name ,props)
                (pop-mark)
                (message "No rich-text to render.")))))
        (unset-command-keys selected-keymap ',render-func)
@@ -175,11 +181,19 @@ ALIST consists with key and command."
 (defun rich-text-underline-wave-props ()
   '(face (:underline (:style wave))))
 
-(defun rich-text-fontcolor-props ()
-  `(face (:foreground ,rich-text-font-color)))
+(defun rich-text-fontcolor-light-props ()
+  `(face (:foreground ,rich-text-fontcolor-light-color)))
 
-(defun rich-text-highlight-props ()
-  `(face (:background ,rich-text-highlight-color)))
+(defun rich-text-fontcolor-dark-props ()
+  `(face (:foreground ,rich-text-fontcolor-dark-color)))
+
+(defun rich-text-highlight-light-props ()
+  `(face (:background ,rich-text-highlight-light-color
+                      :foreground "black")))
+
+(defun rich-text-highlight-dark-props ()
+  `(face (:background ,rich-text-highlight-dark-color
+                      :foreground "black")))
 
 ;;;; Specific for light/dark themes
 
@@ -228,11 +242,9 @@ ALIST consists with key and command."
 (defun rich-text-ov-set-dwim (name props &optional reverse-p)
   (let (ov)
     (if (use-region-p)
-        (progn
-          (setq ov (ov-set (ov-region) props))
-          (setq ov (ov-set ov 'reverse-p reverse-p)))
-      (setq ov (ov-set (ov-line) props))
-      (setq ov (ov-set ov 'reverse-p reverse-p)))
+        (setq ov (ov-set (ov-region) props))
+      (setq ov (ov-set (ov-line) props)))
+    (setq ov (ov-set ov 'reverse-p reverse-p))
     (setq ov (ov-set ov '(evaporate t)))
     ;; indicate a overlay set by rich text.
     (setq ov (ov-set ov `(rich-text ,name)))
@@ -402,17 +414,12 @@ ALIST consists with key and command."
 (define-rich-text underline-wave "uw"
   (rich-text-underline-wave-props))
 
-(define-rich-text fontcolor "cc"
-  (rich-text-fontcolor-props))
+(define-rich-text-dwim fontcolor "cc"
+  :light (rich-text-fontcolor-light-props)
+  :dark (rich-text-fontcolor-dark-props))
 
-(define-rich-text highlight "vv"
-  (rich-text-highlight-props))
-
-;; (define-rich-text bold-italic "bi"
-;;   '(face (:weight bold :slant italic)))
-
-;; (define-rich-text-dwim underline-line "uu"
-;;   :props (face (:underline (:style wave)))
-;;   :light (face (:underline (:style line))))
+(define-rich-text-dwim highlight "vv"
+  :light (rich-text-highlight-light-props)
+  :dark (rich-text-highlight-dark-props))
 
 (provide 'rich-text)
