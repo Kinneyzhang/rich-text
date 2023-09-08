@@ -21,16 +21,24 @@ use `define-rich-text` and `define-rich-text-dwim` macros to customize your own 
 ## some built-in ones
 There are some built-in rich-text formats:
 
-- headline-1 (**h1**):\
+- headline-1 (key "h1")\
   set `rich-text-headline-1-height` to customize the default height of 'headline-1'.
-- headline-2: set `rich-text-headline-2-height` to customize the default height of 'headline-2'.
-- headline-3: set `rich-text-headline-3-height` to customize the default height of 'headline-3'.
-- bold: set `rich-text-bold-type` to customize the default type of 'bold', the type of 'bold' should be one of the symbols 'ultra-bold extra-bold bold semi-bold normal semi-light light extra-light ultra-light'.
-- italic: set `rich-text-italic-type` to customize the default type of 'italic', the type of 'italic' should be one of the symbols 'italic oblique normal reverse-italic reverse-oblique'.
-- underline-line: straight underline.
-- underline-wave: wave underline.
-- fontcolor: set `rich-text-font-color` to customize the default color of 'fontcolor'.
-- highlight: set `rich-text-highlight-color` to customize the default color of 'highlight'.
+- headline-2 (key "h2")\
+  set `rich-text-headline-2-height` to customize the default height of 'headline-2'.
+- headline-3 (key "h3")\
+  set `rich-text-headline-3-height` to customize the default height of 'headline-3'.
+- bold (key "bb")\
+  set `rich-text-bold-type` to customize the default type of 'bold', the type of 'bold' should be one of the symbols 'ultra-bold extra-bold bold semi-bold normal semi-light light extra-light ultra-light'.
+- italic (key "ii")\
+  set `rich-text-italic-type` to customize the default type of 'italic', the type of 'italic' should be one of the symbols 'italic oblique normal reverse-italic reverse-oblique'.
+- underline-line (key "ul")\
+  straight underline.
+- underline-wave (key "uw")\
+  wave underline.
+- fontcolor (key "cc")\
+  set `rich-text-font-color` to customize the default color of 'fontcolor'.
+- highlight (key "vv")\
+  set `rich-text-highlight-color` to customize the default color of 'highlight'.
 
 ## define-rich-text
 `(define-rich-text NAME KEY PROPS)` could be used to define a simple rich-text format. NAME is the name of rich-text format. KEY is the keybinding. PROPS is elisp text properties.
