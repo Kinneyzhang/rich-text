@@ -189,7 +189,7 @@ ALIST consists with key and command."
 
 (defun rich-text-highlight-light-props ()
   `(face (:background ,rich-text-highlight-light-color
-                      :foreground "black")))
+                      :foreground "light")))
 
 (defun rich-text-highlight-dark-props ()
   `(face (:background ,rich-text-highlight-dark-color
