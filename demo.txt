@@ -7,9 +7,20 @@ Rich-text is an emacs package to render
 
 Configuration
 
+Configuration
+
+Configuration
+
+this is small text
+
 rich-text-selected-ignore-modes is a list of major modes in which you want to ignore rich-text local keybindings when a region is active.
 
 rich-text-selected-key-alist is a alist consists of key and command to render rich text when region is active.
+
+nociwenc3vino24n5iovb24iov24inociwenc3vino24n5iovb24iov24inociwenc3vino24n5iovb24iov24inociwenc3vino24n5iovb24iov24inociwenc3vino24n5iovb24iov24i
+5bv4v4rvw4v3hio4hvoi23hb4ivo2b4uiv2bvio432bvni24bvn
+vhcoiewbv
+voierbv
 
 (define-rich-text-face pretty-green-light-1
   :key "gl1"

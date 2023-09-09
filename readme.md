@@ -60,3 +60,7 @@ e.g.
   :light '(face (:background "#F7E987" :foreground "black"))
   :dark '(face (:background "#C58940" :foreground "white")))
 ```
+
+## rich-text-plus.el
+`rich-text-plus.el` defined some other rich-text with my own preference, feel free to change them as you need.
+You could find more useful rich-text properties in: https://www.gnu.org/software/emacs/manual/html_node/elisp/Special-Properties.html
