@@ -3,7 +3,7 @@ Rich-text is an emacs package to render rich text in various types of files.
 # Demo
 <video id="video" controls="" preload="none">
 <source id="mp4" src="./rich-text-demo.mp4" type="video/mp4">
-</videos>
+</video>
 
 # Configuration
 ```emacs-lisp
