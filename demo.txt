@@ -1,39 +1,26 @@
-Rich Text
+Rich Text quick demo
 
 Introduction
 
-Rich-text is an emacs package to render
-Rich-text is an emacs package to render
+Rich-text is an emacs package to render rich text with overlays.
+Even after the file buffer is killed or emacs is closed, rich text can still be restored when it is opened again.
 
-Configuration
-
-Configuration
-
-Configuration
-
+this is bold text
+this is italic text
 this is small text
-
+this is straight underline
+this is wave underline
+c
 rich-text-selected-ignore-modes is a list of major modes in which you want to ignore rich-text local keybindings when a region is active.
 
-rich-text-selected-key-alist is a alist consists of key and command to render rich text when region is active.
+There are some built-in rich-text formats:
 
-nociwenc3vino24n5iovb24iov24inociwenc3vino24n5iovb24iov24inociwenc3vino24n5iovb24iov24inociwenc3vino24n5iovb24iov24inociwenc3vino24n5iovb24iov24i
-5bv4v4rvw4v3hio4hvoi23hb4ivo2b4uiv2bvio432bvni24bvn
-vhcoiewbv
-voierbv
-
-(define-rich-text-face pretty-green-light-1
-  :key "gl1"
-  :props (face (:background "#5B9A8B" :foreground "white")))
-
-(define-rich-text-face pretty-green-dark-1
-  :key "gd1"
-  :props (face (:background "#016A70" :foreground "white")))
-
-(define-rich-text-face pretty-purple-light-1
-  :key "pl1"
-  :props (face (:background "#8062D6" :foreground "white")))
-
-(define-rich-text-face pretty-orange-light-1
-  :key "ol1"
-  :props (face (:background "#FF8551" :foreground "white")))
+headline-1
+headline-2
+headline-3
+underline-line
+underline-wave
+bold
+italic
+fontcolor
+highlight

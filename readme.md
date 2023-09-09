@@ -1,7 +1,9 @@
 Rich-text is an emacs package to render rich text in various types of files.
 
 # Demo
-
+<video id="video" controls="" preload="none">
+<source id="mp4" src="./rich-text-demo.mp4" type="video/mp4">
+</videos>
 
 # Configuration
 ```emacs-lisp
@@ -62,5 +64,6 @@ e.g.
 ```
 
 ## rich-text-plus.el
-`rich-text-plus.el` defined some other rich-text with my own preference, feel free to change them as you need.
+`rich-text-plus.el` defined some other rich-text with my own preference. If you want to use theme, just `(require 'rich-text-plus)` and feel free to modify them as you need.
+
 You could find more useful rich-text properties in: https://www.gnu.org/software/emacs/manual/html_node/elisp/Special-Properties.html

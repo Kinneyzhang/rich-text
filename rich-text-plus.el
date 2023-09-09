@@ -25,6 +25,7 @@
 (define-rich-text small-text "sm"
   '(face (:height 0.9)))
 
+;; for test
 (define-rich-text-dwim underline-dwim "uu"
   :props '(face (:underline (:style wave)))
   :light '(face (:underline (:style line))))
