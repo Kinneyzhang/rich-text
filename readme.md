@@ -1,9 +1,7 @@
-Rich-text is an emacs package to render rich text in various types of files.
+Rich-text is an emacs package to render rich text with overlays. Even after the file buffer is killed or emacs is closed, rich text can still be restored when it is opened again.
 
 # Demo
-<video controls>
-<source src="./rich-text-demo.mp4" type="video/mp4">
-</video>
+[./rich-text-demo.mp4]
 
 # Configuration
 ```emacs-lisp
