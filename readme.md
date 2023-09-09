@@ -2,8 +2,7 @@ Rich-text is an emacs package to render rich text with overlays. Even after the 
 
 # Demo
 
-<iframe>
-<video src="https://geekinney.com/image/rich-text-demo.mp4" width="90%" height="90%" controls></video>
+<iframe src="https://geekinney.com/image/rich-text-demo.mp4" width="90%" height="90%">
 </iframe>
 
 # Configuration
