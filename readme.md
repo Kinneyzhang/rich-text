@@ -49,7 +49,7 @@ For example, the elisp below define a rich-text format named `bold-underline` wh
 ```
 
 ## usage of *define-rich-text-dwim*
-`(define-rich-text-dwim NAME KEY &KEY PROPS LIGHT DARK)` is an enhanced version of `define-rich-text`, which support setting specific properties for themes with light or dark background. And when the background of theme is changed, the rich-text properties will also be changed adaptably.
+`(define-rich-text-dwim NAME KEY &KEY PROPS LIGHT DARK)` is an enhanced version of `define-rich-text`, which support setting specific properties for themes with light or dark background. **And when the background of theme is changed, the rich-text properties will also be changed adaptably**.
 
 This feature is useful when you want to render different colors separately in light or dark themes, since a color suitable for light themes may not for dark themes, vice versa. 
 
