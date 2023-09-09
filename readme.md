@@ -1,7 +1,7 @@
 Rich-text is an emacs package to render rich text with overlays. Even after the file buffer is killed or emacs is closed, rich text can still be restored when it is opened again.
 
 # Demo
-https://github.com/Kinneyzhang/rich-text/blob/main/rich-text-demo.mp4
+[](https://github.com/Kinneyzhang/rich-text/blob/main/rich-text-demo.mp4)
 
 # Configuration
 ```emacs-lisp
