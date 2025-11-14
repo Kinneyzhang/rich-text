@@ -1,7 +1,8 @@
 (require 'emacsql)
 (require 'emacsql-sqlite)
 
-(defvar rich-text-db-file (expand-file-name "rich-text.db" user-emacs-directory))
+(defvar rich-text-db-file
+  (expand-file-name "rich-text.db" user-emacs-directory))
 
 ;; FIXME: 将id替换为文件在系统中的唯一标识符
 (defvar rich-text-db-models '((ov [id beg end props])))

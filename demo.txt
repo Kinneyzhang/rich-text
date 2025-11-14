@@ -10,7 +10,7 @@ this is italic text
 this is small text
 this is straight underline
 this is wave underline
-c
+
 rich-text-selected-ignore-modes is a list of major modes in which you want to ignore rich-text local keybindings when a region is active.
 
 There are some built-in rich-text formats:

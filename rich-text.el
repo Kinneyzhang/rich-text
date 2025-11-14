@@ -130,6 +130,7 @@ ALIST consists with key and command."
        (define-key selected-keymap ,key #',render-func))))
 
 (cl-defmacro define-rich-text-dwim (name key &key props light dark)
+  (declare (indent defun))
   (let* ((name-str (symbol-name name))
          (func-prefix "rich-text-render-")
          (render-func (intern (concat func-prefix name-str "-dwim"))))
@@ -292,7 +293,9 @@ ALIST consists with key and command."
 (defun rich-text-buffer-or-file-id (&optional buffer-or-name)
   "FIXME: repalce with unique id of file or buffer in system."
   (let ((buffer-or-name (or buffer-or-name (current-buffer))))
-    (buffer-file-name (get-buffer buffer-or-name))))
+    (or
+     (buffer-file-name (get-buffer buffer-or-name))
+     buffer-or-name)))
 
 (defun rich-text-all-id ()
   (when-let ((id (rich-text-buffer-or-file-id (current-buffer))))
